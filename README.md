@@ -10,7 +10,6 @@ Whether you're exploring ADK for the first time or keeping up with its latest de
 
 ## Repository Structure
 
-* **Blogs** – Articles and write-ups documenting discoveries and learnings.
 * **Examples** – Practical implementations and experiments with Google ADK.
 * **Notes** – Quick references, observations, and framework updates.
 * **Resources** – Useful links, documentation, and related materials.
