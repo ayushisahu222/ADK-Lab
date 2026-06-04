@@ -1,0 +1,132 @@
+# .understandignore — patterns for files/dirs to exclude from analysis
+# Syntax: same as .gitignore (globs, # comments, ! negation, trailing / for dirs)
+# Lines below are suggestions — uncomment to activate.
+# Use ! prefix to force-include something excluded by defaults.
+#
+# Built-in defaults (always excluded unless negated):
+#   node_modules/, .git/, dist/, build/, obj/, *.lock, *.min.js, etc.
+#
+# --- From .gitignore (uncomment to exclude) ---
+
+# *.py[cod]
+# *.pyc
+# *$py.class
+# **/dist
+# /tmp
+# /out-tsc
+# /bazel-out
+# *.so
+# .Python
+# develop-eggs/
+# downloads/
+# eggs/
+# .eggs/
+# lib/
+# lib64/
+# parts/
+# sdist/
+# var/
+# wheels/
+# pip-wheel-metadata/
+# share/python-wheels/
+# *.egg-info/
+# .installed.cfg
+# *.egg
+# MANIFEST
+# *.manifest
+# *.spec
+# pip-log.txt
+# pip-delete-this-directory.txt
+# htmlcov/
+# .tox/
+# .nox/
+# .coverage
+# .coverage.*
+# nosetests.xml
+# coverage.xml
+# *.cover
+# *.py,cover
+# .hypothesis/
+# .pytest_cache/
+# *.mo
+# *.pot
+# local_settings.py
+# db.sqlite3
+# db.sqlite3-journal
+# instance/
+# .webassets-cache
+# .scrapy
+# docs/_build/
+# .ipynb_checkpoints
+# profile_default/
+# ipython_config.py
+# .python-version
+# Pipfile.lock
+# Pipfile
+# __pypackages__/
+# celerybeat-schedule
+# celerybeat.pid
+# *.sage.py
+# .env
+# .venv*
+# env/
+# ENV/
+# env.bak/
+# venv.bak/
+# .spyderproject
+# .spyproject
+# .ropeproject
+# /site
+# .mypy_cache/
+# .dmypy.json
+# dmypy.json
+# .pyre/
+# .DS_Store
+# .terraform*
+# .Terraform*
+# tmp*
+# **/node_modules
+# npm-debug.log
+# yarn-error.log
+# .project
+# .classpath
+# .c9/
+# *.launch
+# .settings/
+# *.sublime-workspace
+# .vscode/*
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
+# .history/*
+# **/.angular/*
+# /.angular/cache
+# .sass-cache/
+# /connect.lock
+# /coverage
+# /libpeerconnection.log
+# testem.log
+# /typings
+# .DS_Store
+# Thumbs.db
+# *.vscode*
+# .persist_vector_store
+# tests/load_test/.results/*.html
+# tests/load_test/.results/*.csv
+# locust_env
+# my_env.tfvars
+# .streamlit_chats
+# .saved_chats
+# .env
+# .requirements.txt
+
+# --- Detected directories (uncomment to exclude) ---
+
+# tests/
+
+# --- Test file patterns (uncomment to exclude) ---
+
+# *.test.*
+# *.spec.*
+# *.snap

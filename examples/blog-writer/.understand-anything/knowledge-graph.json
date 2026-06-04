@@ -1,0 +1,941 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "blogger-agent",
+    "languages": [
+      "json",
+      "markdown",
+      "python",
+      "toml",
+      "txt"
+    ],
+    "frameworks": [
+      "Google ADK",
+      "Google GenAI",
+      "Pydantic",
+      "pytest"
+    ],
+    "description": "A multi-agent system built with the Google Agent Development Kit (ADK) that helps users create technical blog posts, orchestrating a main interactive agent and specialized sub-agents for planning, writing, editing, and social media.",
+    "analyzedAt": "2026-06-03T17:09:41.563Z",
+    "gitCommitHash": "a4694c47a5a13bdc6529a50edc7a0d435ee601c0"
+  },
+  "nodes": [
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Primary project documentation covering installation with uv, project setup, running the agent and tests, project structure, the multi-agent architecture, tools, workflow, and an example conversation.",
+      "tags": [
+        "documentation",
+        "entry-point",
+        "overview",
+        "getting-started"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:agent_explainer.md",
+      "type": "document",
+      "name": "agent_explainer.md",
+      "filePath": "agent_explainer.md",
+      "summary": "In-depth explainer of the blogger_agent ecosystem, describing the orchestrator interactive_blogger_agent, each specialized sub-agent, the supporting tools and utilities, and the end-to-end agent workflow.",
+      "tags": [
+        "documentation",
+        "architecture",
+        "deep-dive",
+        "overview"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:blogger_agent/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "blogger_agent/__init__.py",
+      "summary": "Package barrel for the blogger_agent package that re-exports the agent module to expose the root agent.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "package-init"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:blogger_agent/agent.py",
+      "type": "file",
+      "name": "agent.py",
+      "filePath": "blogger_agent/agent.py",
+      "summary": "Defines the orchestrating interactive_blogger_agent (exposed as root_agent), wiring together the planner, writer, editor, and social media sub-agents plus the codebase analysis and file-saving tools, and specifying the interactive blogging workflow.",
+      "tags": [
+        "entry-point",
+        "orchestrator",
+        "agent-definition",
+        "service",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Defines an ADK Agent at module scope with sub_agents and FunctionTool-wrapped tools rather than via functions/classes."
+    },
+    {
+      "id": "file:blogger_agent/agent_utils.py",
+      "type": "file",
+      "name": "agent_utils.py",
+      "filePath": "blogger_agent/agent_utils.py",
+      "summary": "Utility module providing a model callback used by sub-agents to suppress intermediate agent output.",
+      "tags": [
+        "utility",
+        "callback",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:blogger_agent/agent_utils.py:suppress_output_callback",
+      "type": "function",
+      "name": "suppress_output_callback",
+      "filePath": "blogger_agent/agent_utils.py",
+      "lineRange": [
+        19,
+        21
+      ],
+      "summary": "Callback that suppresses an agent's intermediate model output by returning empty content for the callback context.",
+      "tags": [
+        "callback",
+        "utility",
+        "output-control"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:blogger_agent/config.py",
+      "type": "file",
+      "name": "config.py",
+      "filePath": "blogger_agent/config.py",
+      "summary": "Central configuration module defining the ResearchConfiguration dataclass and a shared config instance specifying the worker and critic models and search iteration limits used across agents.",
+      "tags": [
+        "config",
+        "configuration",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:blogger_agent/config.py:ResearchConfiguration",
+      "type": "class",
+      "name": "ResearchConfiguration",
+      "filePath": "blogger_agent/config.py",
+      "lineRange": [
+        32,
+        43
+      ],
+      "summary": "Configuration data class holding model selections (critic_model, worker_model) and the maximum number of search iterations for the agents.",
+      "tags": [
+        "config",
+        "data-model",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:blogger_agent/sub_agents/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "blogger_agent/sub_agents/__init__.py",
+      "summary": "Barrel module that re-exports the specialized sub-agents (blog editor, planner, writer, social media writer) for import by the main agent.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "package-init"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:blogger_agent/sub_agents/blog_editor.py",
+      "type": "file",
+      "name": "blog_editor.py",
+      "filePath": "blogger_agent/sub_agents/blog_editor.py",
+      "summary": "Defines the blog_editor sub-agent responsible for revising blog post drafts based on user feedback.",
+      "tags": [
+        "agent-definition",
+        "sub-agent",
+        "editor",
+        "service"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Defines an ADK Agent at module scope rather than via functions or classes."
+    },
+    {
+      "id": "file:blogger_agent/sub_agents/blog_planner.py",
+      "type": "file",
+      "name": "blog_planner.py",
+      "filePath": "blogger_agent/sub_agents/blog_planner.py",
+      "summary": "Defines the robust_blog_planner sub-agent that generates a blog post outline, combined with an outline validation checker to ensure a valid plan is produced.",
+      "tags": [
+        "agent-definition",
+        "sub-agent",
+        "planner",
+        "validation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Defines an ADK Agent at module scope and composes it with a validation checker."
+    },
+    {
+      "id": "file:blogger_agent/sub_agents/blog_writer.py",
+      "type": "file",
+      "name": "blog_writer.py",
+      "filePath": "blogger_agent/sub_agents/blog_writer.py",
+      "summary": "Defines the robust_blog_writer sub-agent that writes the blog post from the approved outline, paired with a blog post validation checker to ensure a valid draft is produced.",
+      "tags": [
+        "agent-definition",
+        "sub-agent",
+        "writer",
+        "validation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Defines an ADK Agent at module scope and composes it with a validation checker."
+    },
+    {
+      "id": "file:blogger_agent/sub_agents/social_media_writer.py",
+      "type": "file",
+      "name": "social_media_writer.py",
+      "filePath": "blogger_agent/sub_agents/social_media_writer.py",
+      "summary": "Defines the social_media_writer sub-agent that generates social media promotional posts for an approved blog post.",
+      "tags": [
+        "agent-definition",
+        "sub-agent",
+        "social-media",
+        "service"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Defines an ADK Agent at module scope rather than via functions or classes."
+    },
+    {
+      "id": "file:blogger_agent/tools.py",
+      "type": "file",
+      "name": "tools.py",
+      "filePath": "blogger_agent/tools.py",
+      "summary": "Provides agent tool functions: saving a blog post to a markdown file and analyzing a codebase directory to extract its structure and content.",
+      "tags": [
+        "utility",
+        "tools",
+        "serialization",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:blogger_agent/tools.py:save_blog_post_to_file",
+      "type": "function",
+      "name": "save_blog_post_to_file",
+      "filePath": "blogger_agent/tools.py",
+      "lineRange": [
+        19,
+        23
+      ],
+      "summary": "Writes the provided blog post content to a markdown file with the given filename.",
+      "tags": [
+        "file-io",
+        "serialization",
+        "tool"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:blogger_agent/tools.py:analyze_codebase",
+      "type": "function",
+      "name": "analyze_codebase",
+      "filePath": "blogger_agent/tools.py",
+      "lineRange": [
+        26,
+        39
+      ],
+      "summary": "Scans a directory using glob, reads source files, and aggregates their content to provide codebase context to the blogging agent.",
+      "tags": [
+        "file-io",
+        "analysis",
+        "tool"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:blogger_agent/validation_checkers.py",
+      "type": "file",
+      "name": "validation_checkers.py",
+      "filePath": "blogger_agent/validation_checkers.py",
+      "summary": "Defines validation checker agents that inspect session state to confirm that a valid outline and blog post were produced, emitting events to control the agent workflow loop.",
+      "tags": [
+        "validation",
+        "agent-definition",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:blogger_agent/validation_checkers.py:OutlineValidationChecker",
+      "type": "class",
+      "name": "OutlineValidationChecker",
+      "filePath": "blogger_agent/validation_checkers.py",
+      "lineRange": [
+        22,
+        34
+      ],
+      "summary": "Checker agent whose async run implementation reads the blog outline from session state and emits an event to escalate or continue the workflow based on its presence.",
+      "tags": [
+        "validation",
+        "event-handler",
+        "agent-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:blogger_agent/validation_checkers.py:BlogPostValidationChecker",
+      "type": "class",
+      "name": "BlogPostValidationChecker",
+      "filePath": "blogger_agent/validation_checkers.py",
+      "lineRange": [
+        37,
+        46
+      ],
+      "summary": "Checker agent whose async run implementation reads the blog post from session state and emits an event to escalate or continue the workflow based on its presence.",
+      "tags": [
+        "validation",
+        "event-handler",
+        "agent-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:eval/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "eval/README.md",
+      "summary": "Documentation describing how to run the blogger agent evaluation and the test scenarios it covers.",
+      "tags": [
+        "documentation",
+        "evaluation",
+        "testing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:eval/data/test_config.json",
+      "type": "config",
+      "name": "test_config.json",
+      "filePath": "eval/data/test_config.json",
+      "summary": "Evaluation configuration specifying the worker and critic models and evaluation criteria used by the agent evaluation harness.",
+      "tags": [
+        "configuration",
+        "evaluation",
+        "testing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:eval/test_eval.py",
+      "type": "file",
+      "name": "test_eval.py",
+      "filePath": "eval/test_eval.py",
+      "summary": "Smoke test that instantiates the blogger agent with an in-memory session and a Runner, sends a prompt, and asserts that a non-empty final response is produced.",
+      "tags": [
+        "test",
+        "evaluation",
+        "smoke-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:eval/test_eval.py:test_blogger_agent_smoke_test",
+      "type": "function",
+      "name": "test_blogger_agent_smoke_test",
+      "filePath": "eval/test_eval.py",
+      "lineRange": [
+        9,
+        40
+      ],
+      "summary": "Async smoke test that runs the root agent end-to-end via a Runner and asserts a non-empty final response is returned.",
+      "tags": [
+        "test",
+        "smoke-test",
+        "async"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:pyproject.toml",
+      "type": "config",
+      "name": "pyproject.toml",
+      "filePath": "pyproject.toml",
+      "summary": "Project metadata and build configuration declaring dependencies, optional dependency groups, and tooling settings for ruff, mypy, codespell, pytest, and the agent starter pack.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "dependencies",
+        "tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:requirements.txt",
+      "type": "document",
+      "name": "requirements.txt",
+      "filePath": "requirements.txt",
+      "summary": "Lists the Python package dependencies required to run the blogger agent project.",
+      "tags": [
+        "documentation",
+        "dependencies",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:tests/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "tests/README.md",
+      "summary": "Documentation describing how to run the blogger agent tests and the test scenario they cover.",
+      "tags": [
+        "documentation",
+        "testing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_agent.py",
+      "type": "file",
+      "name": "test_agent.py",
+      "filePath": "tests/test_agent.py",
+      "summary": "Test/driver script that runs the root agent against a prompt using an in-memory session and Runner, printing the streamed events and final response.",
+      "tags": [
+        "test",
+        "integration-test",
+        "driver"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_agent.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "tests/test_agent.py",
+      "lineRange": [
+        10,
+        43
+      ],
+      "summary": "Async entry point that creates a session and Runner, sends a prompt to the root agent, and prints the resulting events and final response.",
+      "tags": [
+        "test",
+        "driver",
+        "async"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:blogger_agent/__init__.py",
+      "target": "file:blogger_agent/agent.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/agent.py",
+      "target": "file:blogger_agent/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/agent.py",
+      "target": "file:blogger_agent/sub_agents/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/agent.py",
+      "target": "file:blogger_agent/tools.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/__init__.py",
+      "target": "file:blogger_agent/sub_agents/blog_editor.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/__init__.py",
+      "target": "file:blogger_agent/sub_agents/blog_planner.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/__init__.py",
+      "target": "file:blogger_agent/sub_agents/blog_writer.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/__init__.py",
+      "target": "file:blogger_agent/sub_agents/social_media_writer.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_editor.py",
+      "target": "file:blogger_agent/agent_utils.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_editor.py",
+      "target": "file:blogger_agent/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_planner.py",
+      "target": "file:blogger_agent/agent_utils.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_planner.py",
+      "target": "file:blogger_agent/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_planner.py",
+      "target": "file:blogger_agent/validation_checkers.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_writer.py",
+      "target": "file:blogger_agent/agent_utils.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_writer.py",
+      "target": "file:blogger_agent/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/blog_writer.py",
+      "target": "file:blogger_agent/validation_checkers.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/sub_agents/social_media_writer.py",
+      "target": "file:blogger_agent/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:eval/test_eval.py",
+      "target": "file:blogger_agent/agent.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:tests/test_agent.py",
+      "target": "file:blogger_agent/agent.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:blogger_agent/agent_utils.py",
+      "target": "function:blogger_agent/agent_utils.py:suppress_output_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:blogger_agent/agent_utils.py",
+      "target": "function:blogger_agent/agent_utils.py:suppress_output_callback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:blogger_agent/config.py",
+      "target": "class:blogger_agent/config.py:ResearchConfiguration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:blogger_agent/config.py",
+      "target": "class:blogger_agent/config.py:ResearchConfiguration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:blogger_agent/tools.py",
+      "target": "function:blogger_agent/tools.py:save_blog_post_to_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:blogger_agent/tools.py",
+      "target": "function:blogger_agent/tools.py:save_blog_post_to_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:blogger_agent/tools.py",
+      "target": "function:blogger_agent/tools.py:analyze_codebase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:blogger_agent/tools.py",
+      "target": "function:blogger_agent/tools.py:analyze_codebase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:blogger_agent/validation_checkers.py",
+      "target": "class:blogger_agent/validation_checkers.py:OutlineValidationChecker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:blogger_agent/validation_checkers.py",
+      "target": "class:blogger_agent/validation_checkers.py:OutlineValidationChecker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:blogger_agent/validation_checkers.py",
+      "target": "class:blogger_agent/validation_checkers.py:BlogPostValidationChecker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:blogger_agent/validation_checkers.py",
+      "target": "class:blogger_agent/validation_checkers.py:BlogPostValidationChecker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:eval/test_eval.py",
+      "target": "function:eval/test_eval.py:test_blogger_agent_smoke_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:eval/test_eval.py",
+      "target": "function:eval/test_eval.py:test_blogger_agent_smoke_test",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:tests/test_agent.py",
+      "target": "function:tests/test_agent.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_agent.py",
+      "target": "function:tests/test_agent.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:blogger_agent/agent.py",
+      "target": "file:eval/test_eval.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:blogger_agent/agent.py",
+      "target": "file:tests/test_agent.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:blogger_agent/agent.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:agent_explainer.md",
+      "target": "file:blogger_agent/agent.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:agent_explainer.md",
+      "target": "file:blogger_agent/sub_agents/blog_planner.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:agent_explainer.md",
+      "target": "file:blogger_agent/sub_agents/blog_writer.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:agent_explainer.md",
+      "target": "file:blogger_agent/sub_agents/blog_editor.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:agent_explainer.md",
+      "target": "file:blogger_agent/sub_agents/social_media_writer.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:agent_explainer.md",
+      "target": "file:blogger_agent/tools.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:eval/README.md",
+      "target": "file:eval/test_eval.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:tests/README.md",
+      "target": "file:tests/test_agent.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:eval/data/test_config.json",
+      "target": "file:eval/test_eval.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:pyproject.toml",
+      "target": "file:blogger_agent/agent.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:orchestration",
+      "name": "Orchestration Layer",
+      "description": "The interactive root agent that wires together the planner, writer, editor, and social media sub-agents plus tools, exposed through the package barrel as the application entry point.",
+      "nodeIds": [
+        "file:blogger_agent/__init__.py",
+        "file:blogger_agent/agent.py"
+      ]
+    },
+    {
+      "id": "layer:sub-agents",
+      "name": "Sub-Agents Layer",
+      "description": "Specialized ADK sub-agents for blog planning, writing, editing, and social media promotion, registered through the sub_agents package barrel.",
+      "nodeIds": [
+        "file:blogger_agent/sub_agents/__init__.py",
+        "file:blogger_agent/sub_agents/blog_editor.py",
+        "file:blogger_agent/sub_agents/blog_planner.py",
+        "file:blogger_agent/sub_agents/blog_writer.py",
+        "file:blogger_agent/sub_agents/social_media_writer.py"
+      ]
+    },
+    {
+      "id": "layer:shared-support",
+      "name": "Shared Support Layer",
+      "description": "Foundational modules consumed across the agents: centralized model configuration, output-suppressing callbacks, blog-saving and codebase-analysis tools, and outline/post validation checkers.",
+      "nodeIds": [
+        "file:blogger_agent/config.py",
+        "file:blogger_agent/agent_utils.py",
+        "file:blogger_agent/tools.py",
+        "file:blogger_agent/validation_checkers.py"
+      ]
+    },
+    {
+      "id": "layer:test",
+      "name": "Testing & Evaluation Layer",
+      "description": "Smoke tests, driver scripts, and evaluation harnesses that run the root agent via an in-memory Runner, plus their evaluation criteria configuration.",
+      "nodeIds": [
+        "file:eval/test_eval.py",
+        "config:eval/data/test_config.json",
+        "file:tests/test_agent.py"
+      ]
+    },
+    {
+      "id": "layer:documentation",
+      "name": "Documentation & Configuration Layer",
+      "description": "Project READMEs and the agent explainer alongside build metadata and dependency declarations covering setup, architecture, and execution of the blogger agent.",
+      "nodeIds": [
+        "document:README.md",
+        "document:agent_explainer.md",
+        "document:eval/README.md",
+        "document:tests/README.md",
+        "document:requirements.txt",
+        "config:pyproject.toml"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Project Overview",
+      "description": "Start with the README to understand what the Blogger Agent is: a multi-agent system built on Google's Agent Development Kit (ADK) that helps users write technical blog posts. It lays out the core workflow (plan an outline, write the post, edit on feedback, then generate social posts) and the modular package structure that the rest of this tour will walk through. Read this first to get the mental model before diving into code.",
+      "nodeIds": [
+        "document:README.md",
+        "document:agent_explainer.md"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Package Entry Point",
+      "description": "The package barrel re-exports the agent module so that ADK and external callers can discover the root agent through a stable public surface. This tiny file is the true entry point: importing blogger_agent gives you the orchestrator without needing to know its internal file layout. From here the dependency graph fans out into the actual logic.",
+      "nodeIds": [
+        "file:blogger_agent/__init__.py"
+      ],
+      "languageLesson": "A Python package's __init__.py acts as a barrel module: re-exporting names from submodules (e.g. 'from . import agent') lets consumers import from the package root and hides internal structure."
+    },
+    {
+      "order": 3,
+      "title": "The Orchestrator Agent",
+      "description": "This is the heart of the system. agent.py defines interactive_blogger_agent (exposed as root_agent), the main interactive agent that talks to the user and delegates work to specialized sub-agents. It wires together the planner, writer, editor, and social media sub-agents along with custom tools, implementing the plan to write to edit to promote workflow described in the README. It has the highest fan-in and fan-out in the codebase, making it the central hub everything else connects to.",
+      "nodeIds": [
+        "file:blogger_agent/agent.py"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Shared Configuration",
+      "description": "Before exploring the sub-agents, look at config.py, the first direct dependency of the orchestrator. It defines a ResearchConfiguration and a shared config instance that centralizes which models the agents use and limits like search counts. Centralizing this means every agent in the system speaks to the same models through one source of truth, so swapping a model is a one-line change.",
+      "nodeIds": [
+        "file:blogger_agent/config.py"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Sub-Agents Registry",
+      "description": "The orchestrator pulls its specialists from the sub_agents package barrel, which re-exports the planner, writer, editor, and social media writer. This file is the seam between the orchestration layer and the sub-agents layer: it lets agent.py import all four specialists from one place. The next steps open each specialist in the order the workflow uses them.",
+      "nodeIds": [
+        "file:blogger_agent/sub_agents/__init__.py"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "The Planner Sub-Agent",
+      "description": "The workflow's first step is planning. blog_planner.py defines robust_blog_planner, which generates a structured outline for the blog post and pairs it with an outline validation checker to guarantee the result is usable. It imports from validation_checkers (covered later) to confirm a valid outline landed in session state before the workflow advances to writing.",
+      "nodeIds": [
+        "file:blogger_agent/sub_agents/blog_planner.py"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "The Writer Sub-Agent",
+      "description": "With an approved outline in hand, the writer takes over. blog_writer.py defines robust_blog_writer, which expands the outline into a full blog post and uses a blog post validation checker to verify the draft was actually produced. Like the planner, it leans on validation_checkers to make the multi-step pipeline reliable rather than hoping each stage succeeded.",
+      "nodeIds": [
+        "file:blogger_agent/sub_agents/blog_writer.py"
+      ]
+    },
+    {
+      "order": 8,
+      "title": "The Editor Sub-Agent",
+      "description": "Once a draft exists, the editor refines it. blog_editor.py defines the blog_editor sub-agent that revises drafts based on user feedback, implementing the interactive edit-on-feedback loop from the README. This is where the human-in-the-loop nature of the orchestrator pays off, turning a first draft into a polished post over successive rounds.",
+      "nodeIds": [
+        "file:blogger_agent/sub_agents/blog_editor.py"
+      ]
+    },
+    {
+      "order": 9,
+      "title": "The Social Media Sub-Agent",
+      "description": "The final workflow stage promotes the finished post. social_media_writer.py defines the social_media_writer sub-agent, which generates short promotional posts derived from the completed blog. It closes the loop the README describes: plan, write, edit, then broadcast.",
+      "nodeIds": [
+        "file:blogger_agent/sub_agents/social_media_writer.py"
+      ]
+    },
+    {
+      "order": 10,
+      "title": "Validation Checkers",
+      "description": "Both the planner and the writer depend on this module, the deepest node in the dependency graph. validation_checkers.py defines checker agents that inspect session state to confirm a valid outline and blog post were produced before the pipeline moves on. This is the quality gate that makes the multi-agent workflow robust, which is why the planner and writer are named 'robust'.",
+      "nodeIds": [
+        "file:blogger_agent/validation_checkers.py"
+      ]
+    },
+    {
+      "order": 11,
+      "title": "Custom Tools and Callbacks",
+      "description": "Beyond sub-agents, the orchestrator is equipped with custom tools. tools.py provides functions to save a finished blog post to a markdown file and to analyze a codebase directory (useful for generating technical content). agent_utils.py supplies a model callback that suppresses noisy intermediate output from sub-agents so the user only sees the final result. Together these are the shared support that makes the agent practical to use.",
+      "nodeIds": [
+        "file:blogger_agent/tools.py",
+        "file:blogger_agent/agent_utils.py"
+      ]
+    },
+    {
+      "order": 12,
+      "title": "Tests and Evaluation",
+      "description": "Finally, see how the system is exercised. tests/test_agent.py is a driver that runs root_agent against a prompt using an in-memory session and ADK Runner, while eval/test_eval.py is a smoke test asserting the agent returns a non-empty response. test_config.json declares the models and criteria used to evaluate output quality. These show both how to run the agent programmatically and how its behavior is verified.",
+      "nodeIds": [
+        "file:tests/test_agent.py",
+        "file:eval/test_eval.py",
+        "config:eval/data/test_config.json"
+      ]
+    },
+    {
+      "order": 13,
+      "title": "Build and Dependencies",
+      "description": "To wrap up, the project's manifest and dependency declarations show how it all gets installed and run. pyproject.toml holds project metadata, build configuration, and tooling settings, and configures the package whose root_agent you have just toured; requirements.txt lists the Python packages needed. This is your reference for reproducing the environment and running the agent via uv as the README instructs.",
+      "nodeIds": [
+        "config:pyproject.toml",
+        "document:requirements.txt"
+      ]
+    }
+  ]
+}
